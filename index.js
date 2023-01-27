@@ -34,20 +34,25 @@ const contractABI = [
 
 const provider = new ethers.providers.AlchemyProvider(
   'goerli',
-  process.env.PROVIDER_API_KEY
+  process.env.TESTNET_ALCHEMY_KEY
 );
+
+const wallet = new ethers.Wallet(process.env.TESTNET_PRIVATE_KEY, provider);
 
 async function main() {
   const counterContract = new ethers.Contract(
     '0x5F91eCd82b662D645b15Fd7D2e20E5e5701CCB7A',
     contractABI,
-    provider
+    wallet
   );
 
   // This is only lecture, but if you want to call a function that changes the state of the contract, you need to use a signer
   const count = await counterContract.count();
 
+  const tx = await counterContract.inc();
+
   console.log(count.toString());
+  console.log(tx);
 }
 
 main();
